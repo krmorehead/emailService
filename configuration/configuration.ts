@@ -7,11 +7,11 @@ export const global_configuration: i_global_config = {
       type: API_Request_Types.Post,
       api_ref: 'spendgrid_api_key'
     },
-    {
-      slug: 'snailgun',
-      type: API_Request_Types.Post,
-      api_ref: 'snailgun_api_key'
-    }]
+      {
+        slug: 'snailgun',
+        type: API_Request_Types.Post,
+        api_ref: 'snailgun_api_key'
+      }]
  }
 }
 

@@ -9,8 +9,13 @@ app.use(bodyParser());
 
 app.post( "/email", async( req: any, res: any ) => {
   const body: i_email_params = req.body;
-  const result = await EmailController.sendEmail(body);
-  res.send(JSON.stringify(result));
+  try {
+    await EmailController.sendEmail(body);
+    res.send('email successfully sent');
+  } catch(e) {
+    console.log(e);
+    res.send(JSON.stringify(e));
+  }
 } );
 
 // start the Express server
