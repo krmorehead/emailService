@@ -1,3 +1,5 @@
+Create a local .env to maintain secrets
+
 To call on the API after starting
 
 ```
