@@ -1,12 +1,13 @@
 import {EmailService, i_email_params} from "../src/Services/Email.Service";
 import { expect } from 'chai';
+import exp = require("constants");
 
 // @ts-ignore - testing
 let samplePostParams: i_email_params = {}
 
 describe('Email Service', () => {
 
-  describe('method validatePostParams', () => {
+  describe('method: validatePostParams', () => {
     it('should do nothing upon valid parameters', () => {
       expect(() => {EmailService.validatePostParams(samplePostParams)}).to.not.throw()
     });
@@ -29,6 +30,15 @@ describe('Email Service', () => {
       //@ts-ignore
       expect(() => {EmailService.validatePostParams(samplePostParams)}).to.throw()
     });
+  });
+
+  describe('method: proccessPostParams', () => {
+    it('Should convert the inner HTML into a plain text version', () => {
+      samplePostParams.body = "<h1>Weekly Report</h1><p>You saved 10 hours this week!</p>";
+      const expectedBody = "Weekly ReportYou saved 10 hours this week!"
+      const body = EmailService.processPostParams(samplePostParams).body;
+      expect(body).to.equal(expectedBody);
+    })
   });
 
   beforeEach(() => {

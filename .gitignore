@@ -1,4 +1,5 @@
-.env
+secrets.ts
 node_modules
 .idea
 /dist
+secrets.ts
