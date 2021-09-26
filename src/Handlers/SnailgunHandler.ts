@@ -28,12 +28,18 @@ export class SnailgunHandler extends StandardHandler{
 
   async resolveRequest(): Promise<any> {
     return new Promise((resolve, reject) => {
-      setInterval(() => {
-        const status = this.checkStatus.bind(this.requestId)
+      const interval = setInterval(async () => {
+        const status = await (this.checkStatus.bind(this.requestId)).status;
         console.log(`checking, ${status}`)
 
-        if (status) {
+        if (status === 'sent') {
+          resolve(status);
+          clearInterval(interval);
+        }
+
+        if (status === 'failed') {
           reject(status);
+          clearInterval(interval);
         }
       }, this.checkInterval);
     });
