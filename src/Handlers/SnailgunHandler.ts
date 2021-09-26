@@ -18,7 +18,6 @@ export class SnailgunHandler extends StandardHandler{
 
   async execute(params: i_email_params) {
     const initializeRequest: i_snailgun_response = await super.execute(params);
-    console.log(initializeRequest)
     this.requestId = initializeRequest.id;
     if (!this.requestId) {
       throw new Error ('Failed to Enqueue email with snailgun');
@@ -30,7 +29,6 @@ export class SnailgunHandler extends StandardHandler{
     return new Promise((resolve, reject) => {
       const interval = setInterval(async () => {
         const status = await (this.checkStatus.bind(this.requestId)).status;
-        console.log(`checking, ${status}`)
 
         if (status === 'sent') {
           resolve(status);
