@@ -26,5 +26,6 @@ export interface i_integration_map {
 export interface i_integration_config {
   slug: string,
   type: API_Request_Types,
-  api_ref: string
+  api_ref: string,
+  checkInterval?: number
 }

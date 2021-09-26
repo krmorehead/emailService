@@ -14,7 +14,7 @@ export class StandardHandler {
     this.params = params;
   }
 
-  async execute(params: i_email_params): Promise<void> {
+  async execute(params: i_email_params): Promise<any> {
     const options = {
       host: this.host,
       path: this.path,
@@ -24,11 +24,25 @@ export class StandardHandler {
         'X-Api-Key': this.apiKey
       }
     }
-    await http.request(options);
+    return this.executeHTTPRequest(options);
   }
 
   get apiKey(): string {
     // @ts-ignore
     return secrets[this.params.api_ref];
+  }
+
+  protected async executeHTTPRequest(options: any) {
+    return new Promise ((resolve, reject) => {
+      let req = http.request(options);
+
+      req.on('response', res => {
+        resolve(res);
+      });
+
+      req.on('error', err => {
+        reject(err);
+      });
+    });
   }
 }
