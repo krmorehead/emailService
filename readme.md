@@ -56,7 +56,7 @@ Overall I am happy with my architecture
  - Email Router -> Email Controller which corrals a few Email Service Calls
  - Email Service -> Responsible for Validation, processing, and calling on Integration Factory
  - Integration Factory -> Responsible for fetching the proper integrations that the Service needs to use.
- - Email Service uses result to call on the proper handlers (here maybe this isn't the responsibility of the email service but instead could be offloaded to some sort of handler factory)
+ - Email Integration Factory uses result to call on the proper handlers (here maybe this isn't the responsibility of the email service but instead could be offloaded to some sort of more generic factory)
  - Each handler is a stand alone piece of code that can be called for each of the end points. And each handler has all of the host information set up. They will fetch their API key from the secrets file that the engineer has set up.
 
 Possible memory leak with millions of calls
