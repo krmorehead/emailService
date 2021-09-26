@@ -7,6 +7,7 @@ export class Helpers {
     return htmlString;
   }
 
+  // TODO - this works but won't compile properly
   // public static extractInnerContentFromHTMLString(htmlString: string) {
   //   const doc = new JSDOM('').window.document;
   //   var span = doc.createElement('span');
