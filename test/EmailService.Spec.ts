@@ -1,9 +1,9 @@
-import {EmailService, i_email_params} from "../src/Services/Email.Service";
+import {EmailService, IEmailParams} from "../src/Services/Email.Service";
 import { expect } from 'chai';
 import exp = require("constants");
 
 // @ts-ignore - testing
-let samplePostParams: i_email_params = {}
+let samplePostParams: IEmailParams = {}
 
 describe('Email Service', () => {
 
@@ -35,7 +35,7 @@ describe('Email Service', () => {
   describe('method: proccessPostParams', () => {
     it('Should convert the inner HTML into a plain text version', () => {
       samplePostParams.body = "<h1>Weekly Report</h1><p>You saved 10 hours this week!</p>";
-      const expectedBody = "Weekly ReportYou saved 10 hours this week!"
+      const expectedBody = "WEEKLY REPORT\n\nYou saved 10 hours this week!"
       const body = EmailService.processPostParams(samplePostParams).body;
       expect(body).to.equal(expectedBody);
     })

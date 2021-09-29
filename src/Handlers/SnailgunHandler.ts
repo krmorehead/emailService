@@ -1,23 +1,23 @@
 import {StandardHandler} from "./StandardHandler";
-import {i_email_params} from "../Services/Email.Service";
-import {API_Request_Types} from "../Globals/global_interfaces";
-import http from "http";
-import {i_integration_config} from "../../configuration/configuration";
+import {IEmailParams} from "../Services/Email.Service";
+import {APIRequestTypes} from "../Globals/globalInterfaces";
+import {IIntegrationConfig} from "../../configuration/configuration";
 
-export class SnailgunHandler extends StandardHandler{
-  protected host = 'https://bw-interviews.herokuapp.com';
+export class SnailgunHandler extends StandardHandler {
+  protected host = 'bw-interviews.herokuapp.com';
   protected path = '/snailgun/emails';
-  protected method = API_Request_Types.Post;
+  protected method = APIRequestTypes.Post;
   protected requestId: string;
   protected checkInterval: number;
 
-  public constructor(params: i_integration_config) {
+  public constructor(params: IIntegrationConfig) {
     super(params);
     this.checkInterval = params.checkInterval || 100;
   }
 
-  async execute(params: i_email_params) {
-    const initializeRequest: i_snailgun_response = await super.execute(params);
+  async execute(params: IEmailParams) {
+    const transformedParams = this.transformParams(params);
+    const initializeRequest: ISnailgunResponse = await super.execute(transformedParams);
     this.requestId = initializeRequest.id;
     if (!this.requestId) {
       throw new Error ('Failed to Enqueue email with snailgun');
@@ -28,7 +28,8 @@ export class SnailgunHandler extends StandardHandler{
   async resolveRequest(): Promise<any> {
     return new Promise((resolve, reject) => {
       const interval = setInterval(async () => {
-        const status = await (this.checkStatus.bind(this.requestId)).status;
+        const result = await this.checkStatus(this.requestId);
+        const status = result.status;
 
         if (status === 'sent') {
           resolve(status);
@@ -43,21 +44,33 @@ export class SnailgunHandler extends StandardHandler{
     });
   }
 
+  public transformParams(params: IEmailParams): ISnailgunEmail {
+    return  {
+      from_email: params.from,
+      from_name: params.from_name,
+      to_email: params.to,
+      to_name: params.to_name,
+      subject: params.subject,
+      body: params.body
+    }
+  }
+
   async checkStatus(requestId: string): Promise<any> {
     const options = {
-      // TODO - overloading host, not intedned use
-      host: `https://bw-interviews.herokuapp.com/snailgun/emails/${requestId}`,
-      method: API_Request_Types.Get,
+      host: this.host,
+      path: `${this.path}/${requestId}`,
+      method: APIRequestTypes.Get,
       headers: {
         'Content-Type': 'application/json',
         'X-Api-Key': this.apiKey
       }
     }
-    return this.executeHTTPRequest(options);
+    const result = await this.executeHTTPRequest(options, {});
+    return result;
   }
 }
 
-export interface i_snailgun_response {
+export interface ISnailgunResponse {
   id: string,
   from_email: string,
   from_name: string,
@@ -67,4 +80,13 @@ export interface i_snailgun_response {
   body: string,
   status: string,
   created_at: string
+}
+
+export interface ISnailgunEmail {
+  from_email: string,
+  from_name: string,
+  to_email: string,
+  to_name: string
+  subject: string
+  body: string
 }

@@ -2,5 +2,5 @@ secrets.ts
 node_modules
 .idea
 /dist
-secrets.ts
+.env.json
 dist/*.js

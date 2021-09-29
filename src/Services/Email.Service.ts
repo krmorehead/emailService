@@ -1,6 +1,6 @@
-import {email_regex} from "../Globals/global_constants";
+import {emailRegex} from "../Globals/globalConstants";
 import {Helpers} from "../Globals/Helpers";
-import {i_integration_config} from "../../configuration/configuration";
+import {IIntegrationConfig} from "../../configuration/configuration";
 import {EmailIntegrationFactory} from "../Factories/EmailIntegrationFactory";
 
 export class EmailService {
@@ -13,7 +13,7 @@ export class EmailService {
      body: 'html',
   }
 
-  public static validatePostParams(params: i_email_params) {
+  public static validatePostParams(params: IEmailParams) {
     Object.keys(EmailService.postParamsType).forEach( (paramKey: string) => {
       // @ts-ignore
       const value: string = params[paramKey];
@@ -23,7 +23,7 @@ export class EmailService {
 
       switch (EmailService.postParamsType[paramKey] as string) {
         case 'email':
-          if (!email_regex.test(value)) {
+          if (!emailRegex.test(value)) {
             throw new Error(`${paramKey}: value of ${value} is not a valid email`)
           }
           return;
@@ -45,14 +45,14 @@ export class EmailService {
     })
   }
 
-  public static processPostParams(params: i_email_params): i_email_params {
+  public static processPostParams(params: IEmailParams): IEmailParams {
     // Note cloning can be a performance sink if we run into issues then evaluate option of side effects
     const paramClones = { ...params };
     paramClones.body = Helpers.extractInnerContentFromHTMLString(params.body);
     return paramClones;
   }
 
-  public static async executePostRequest(params: i_email_params, integrations: i_integration_config[]) {
+  public static async executePostRequest(params: IEmailParams, integrations: IIntegrationConfig[]) {
     for (var i = 0; i < integrations.length; i++) {
       const config = integrations[i];
       const integration = EmailIntegrationFactory.getIntegrationHandler(config);
@@ -69,7 +69,7 @@ export class EmailService {
   }
 }
 
-export interface i_email_params {
+export interface IEmailParams {
   to: string,
   to_name: string,
   from: string,

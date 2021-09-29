@@ -1,48 +1,69 @@
-import {i_email_params} from "../Services/Email.Service";
-import {i_integration_config} from "../../configuration/configuration";
-import {secrets} from "../../secrets";
-import * as http from 'http';
-import {API_Request_Types} from "../Globals/global_interfaces";
+import {IIntegrationConfig} from "../../configuration/configuration";
+import * as https from 'https';
+import {APIRequestTypes} from "../Globals/globalInterfaces";
 
 export class StandardHandler {
-  protected params: i_integration_config;
+  protected params: IIntegrationConfig;
   protected host: string;
   protected path: string = '/';
-  protected method: API_Request_Types;
+  protected method: APIRequestTypes;
 
-  constructor(params: i_integration_config) {
+  constructor(params: IIntegrationConfig) {
     this.params = params;
   }
 
-  async execute(params: i_email_params): Promise<any> {
+  async execute(params: any): Promise<any> {
+    let data = '';
+    if (params) {
+      data = JSON.stringify(params);
+    }
     const options = {
       host: this.host,
       path: this.path,
       method: this.method,
+      body: data,
       headers: {
         'Content-Type': 'application/json',
+        'Content-length': data.length,
         'X-Api-Key': this.apiKey
       }
     }
-    return this.executeHTTPRequest(options);
+    const response = await this.executeHTTPRequest(options, params);
+    return response;
   }
 
   get apiKey(): string {
     // @ts-ignore
-    return secrets[this.params.api_ref];
+    return process.env[this.params.apiRef];
   }
 
-  protected async executeHTTPRequest(options: any) {
+  protected async executeHTTPRequest(options: any, params: any): Promise<any> {
     return new Promise ((resolve, reject) => {
-      let req = http.request(options);
+      const data = JSON.stringify(params)
 
-      req.on('response', res => {
-        resolve(res);
-      });
+      const req = https.request(options, res => {
+        let body: any = [];
 
-      req.on('error', err => {
-        reject(err);
-      });
+        res.on('data', d => {
+          body.push(d)
+        })
+
+        res.on('error',(e) => {
+          reject(e);
+        })
+
+        res.on('end',() => {
+          try {
+            body = JSON.parse(Buffer.concat(body).toString());
+          } catch(e) {
+            reject(e);
+          }
+          resolve(body);
+        })
+      })
+      // req.on('error', reject)
+      req.write(data)
+      req.end()
     });
   }
 }

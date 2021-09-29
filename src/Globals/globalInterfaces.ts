@@ -1,4 +1,4 @@
-export enum API_Request_Types {
+export enum APIRequestTypes {
   Post = 'POST',
   Get = 'GET',
   Put = 'PUT',

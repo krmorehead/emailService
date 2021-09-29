@@ -1,14 +1,19 @@
+import * as fs from "fs";
+
 const express = require( "express" );
 const app = express();
-const port = 8080;
 const bodyParser = require('body-parser');
-import { i_email_params } from "./Services/Email.Service";
-import {EmailController} from "./Controllers/EmailController";
+import { IEmailParams } from "./Services/Email.Service";
+import { EmailController } from "./Controllers/EmailController";
+import { InitializeEnv } from "./Globals/initializeEnv";
 
+InitializeEnv.initializeEnv('.env.json') // TODO - dot-env is preferred
+
+const port = process.env.port || 8080;
 app.use(bodyParser());
 
 app.post( "/email", async( req: any, res: any ) => {
-  const body: i_email_params = req.body;
+  const body: IEmailParams = req.body;
   try {
     await EmailController.sendEmail(body);
     res.send('email successfully sent');
