@@ -36,8 +36,7 @@ Express - Express was selected as a common Server side technology. It has built 
 Typescript - As a framework typescript allows for interfaces and type checking which makes organizing and maintaining code much easier than raw JS, expecially in large projects. It also have more object oriented opinions than raw JS which often saves headaches in the long run (especially around types)
 
 <h2>Libraries</h2>
-jsdom/tsdom - JDOM I was able to use to snag the plaintext version of the HTML. Unfortunately I also ran into issues running it with ts-node, although it worked fine with my unit tests. You can example this working by going into `src/Globals/Helpers.ts` and uncommenting the other version of the method. Then running the test in EmailService.Spec.ts around it.
-
+html-to-text - initial attempts with JSDOM and TSDOM did not play with my tsconfig properly, long term I think the tsconfig could be set up differently but short term this library is also perfectly good.
 chai/mocha - I only have a few unit tests but even setting up just those few really helped to test in isolation from the rest of the code
 
 ts-node - allows for real time compiling of typescript without generating all the `js` files. Unfortunately I had some trouble getting it running with my debugger in the time period.
