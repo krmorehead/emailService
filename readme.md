@@ -1,13 +1,13 @@
 <h2>How to install and run your service</h2>
 
-<p>In the root of your directory Create a local secrets.ts to maintain keys</p>
+<p>In the root of your directory Create a local .env.json to maintain keys</p>
 
 <p>Make sure to add in your own api keys</p>
 
 ```
-export const secrets = {
-  spendgrid_api_key: <your api key>,
-  snailgun_api_key: <your api key>
+{
+  "spendgridApiKey": <your api key>,
+  "snailgunApiKey": <your api key>
 }
 ```
 
@@ -19,15 +19,13 @@ Once the server is live you can test it with a curl command (or other method) su
 curl -d '{"to": "susan@abcpreschool.org","to_name": "Miss Susan","from": "noreply@mybrightwheel.com","from_name": "brightwheel","subject": "Your Weekly Report","body": "<h1>Weekly Report</h1><p>You saved 10 hours this week!</p>"}' -H "Content-Type: application/json" -X POST "http://localhost:8080/email"
 ```
 
-You will notice that it will spin for a while and then finally resolve with a socket hangup.
-Unfortunately I was not able to resolve the socket issue before my time ran out.
+Once you `curl` the application it should successfully resolve with sending your email
 
 <h2>Configuration</h2>
 `configuration/configuration.ts` drives the integrations that are configured.
 The application is set up to be able to use 1 or more integrations at a time with a smart failing mechanism for `N` integrations.
 
 The integrations will fail in the order of the array provided. Should only 1 integration be provided then that is the only integration that will be used.
-
 
 <h2>Which language, framework and libraries you chose and why</h2>
 
@@ -47,10 +45,9 @@ ts-node - allows for real time compiling of typescript without generating all th
 
 <h2>Tradeoffs you might have made, anything you left out, or what you might do differently if
 you were to spend additional time on the project </h2>
+With another hour of work I was able to resolve the library issue by swapping over to a different library that had the expected `type` declarations and was able to debug the issues I was having with the socket hangup.
 
-Was not able to get a production version of the plaintext version of the html. I think a little bit of work getting the libraries to play nicely together would have gotten me there.
-
-I am getting socket hangups from the integrations - Unfortunately I was unable to debug what was causing the hangups in time, I have integration handlers set up to handle everything but only in theory.
+My first 3 hours probably had too much time working on boilerplate code causing my slowdown on the first pass.
 
 Overall I am happy with my architecture
  - Email Router -> Email Controller which corrals a few Email Service Calls

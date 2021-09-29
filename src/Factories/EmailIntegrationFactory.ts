@@ -1,9 +1,9 @@
-import {i_integration_config} from "../../configuration/configuration";
+import {IIntegrationConfig} from "../../configuration/configuration";
 import {SpendgridHandler} from "../Handlers/SpendgridHandler";
 import {SnailgunHandler} from "../Handlers/SnailgunHandler";
 
 export class EmailIntegrationFactory {
-  public static getIntegrationHandler(config: i_integration_config) {
+  public static getIntegrationHandler(config: IIntegrationConfig) {
     const integration = config.slug;
     switch (integration) {
       case 'spendgrid':

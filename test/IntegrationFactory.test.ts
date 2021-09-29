@@ -1,4 +1,4 @@
-import {EmailService, i_email_params} from "../src/Services/Email.Service";
+import {EmailService, IEmailParams} from "../src/Services/Email.Service";
 import { expect } from 'chai';
 import {IntegrationFactory} from "../src/Factories/IntegrationFactory";
 
